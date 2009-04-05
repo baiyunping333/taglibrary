@@ -1,4 +1,4 @@
-﻿using Sysstem;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ namespace TagLibrary.DataTypes
             get { return numberOfNeighbours; }
             set { numberOfNeighbours = value; }
         }
-        
+
         private int parentId;
 
         public int ParentId
@@ -39,7 +39,7 @@ namespace TagLibrary.DataTypes
             get { return parentId; }
             set { parentId = value; }
         }
-        
+
         private int parentTime;
 
         public int ParentTime
@@ -57,6 +57,6 @@ namespace TagLibrary.DataTypes
         }
 
 
-        
+
     }
 }
