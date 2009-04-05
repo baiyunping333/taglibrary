@@ -37,9 +37,33 @@ namespace TagLibrary.DataTypes
         }
 
 
+        //Preprocess to store the greedy choice for non FIFO
+        public void PreProcessArc(Arc edge, Graph graph)
+        {
+            int minWeight, minWeightIndex;
+            int timeSeriesLength = graph.LenghtOfTimeSeries;
+            
+            minWeight = 10000;
+            minWeightIndex = -1;
 
-        // return the index of 'node_id' from the list of nodes;
-        // if node_id not in the list , return -1.
+            edge.BestTravelTimeSeries[timeSeriesLength - 1] = -1;
+            
+            int j;
+            for (j = timeSeriesLength - 1; j >= 0; j--)
+            {
+                if (edge.TravelTimeSeries[j] != -1 && minWeight > (edge.TravelTimeSeries[j] + (j + 1)))
+                {
+                    minWeight = edge.TravelTimeSeries[j] + (j + 1);
+                    minWeightIndex = j;
+                }
+                edge.BestTravelTimeSeries[j] = minWeightIndex;
+            }
+            return;
+        }
+
+
+        // return the index of 'nodeId' from the list of nodes;
+        // if nodeId not in the list , return -1.
         public int getNodeIndex(int nodeId, Graph graph)
         {
             int i;
@@ -50,5 +74,10 @@ namespace TagLibrary.DataTypes
             
             return -1;
         }
+
+
+
+
+
     }
 }
