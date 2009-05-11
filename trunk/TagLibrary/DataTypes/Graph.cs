@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace TagLibrary.DataTypes
 {
@@ -64,7 +60,7 @@ namespace TagLibrary.DataTypes
 
         // return the index of 'nodeId' from the list of nodes;
         // if nodeId not in the list , return -1.
-        public int getNodeIndex(int nodeId, Graph graph)
+        public int GetNodeIndex(int nodeId, Graph graph)
         {
             int i;
 
@@ -75,7 +71,92 @@ namespace TagLibrary.DataTypes
             return -1;
         }
 
+        public Result ShortestPaths(int startNodeId, Graph graph)
+        {
+            int i, j;                         /* counters */
+            bool[] visited;     /* is the node visited? */
+            int[] distance;    /* minimum distance(time) to each node from start node*/
+            int[] parent;      /* previous node to reach the current node*/
+            //int parent_wait[graph->n_nodes]; /* waiting time at parent node */
+            int v;                           /* current vertex to process */
+            int w;                           /* candidate next vertex */
+            int weight;                      /* edge weight */
+            int dist;                        /* best current distance from start */
 
+            visited = new bool[graph.NumberOfNodes];
+            distance = new int[graph.NumberOfNodes];
+            parent = new int[graph.NumberOfNodes];
+
+            for (i = 0; i < graph.NumberOfNodes; i++)
+            {
+                visited[i] = false;
+                distance[i] = 32000; //INFINITY;
+                parent[i] = -1;
+            }
+
+            int start = GetNodeIndex(startNodeId, graph);
+            List<Arc> a;
+            distance[start] = 1;
+            v = start;
+
+            while (visited[v] == false)
+            {
+                visited[v] = true;
+                a = graph.Nodes[v].Arcs;
+                //printf(" Examining Node: %d \n", graph->nodes[v].id);
+                for (i = 0; i < graph.Nodes[v].NumberOfNeighbours; i++)
+                {
+                    w = GetNodeIndex(a[i].EndNode, graph);
+                    //TODO: remove
+                   // weight = getWeight(v, distance[v], i);
+                    weight = 1;
+                    //printf("%d, %d, %d\t", a->end, distance[v], weight);
+
+                    if (weight != -1)
+                    {
+                        if (distance[w] > (distance[v] + weight))
+                        {
+                            distance[w] = distance[v] + weight;
+                            //parent_wait[w] = parent_wait[v];
+                            parent[w] = v;
+                            graph.Nodes[w].ParentId = graph.Nodes[v].Id;
+                            graph.Nodes[w].ParentTime = distance[v];
+                            //printf("Weight is less than current minimum\n");
+                        }
+                    }
+                }
+
+                //v = 1;
+                dist = 32000; //INFINITY;
+                for (i = 0; i < graph.Nodes.Count; i++)
+                    if ((visited[i] == false) && (dist > distance[i]))
+                    {
+                        dist = distance[i];
+                        v = i;
+                    }
+            }
+
+            Result result = new Result();
+
+            result.StartNodeId = startNodeId;
+
+            for (i = 0; i < graph.Nodes.Count; i++)
+            {
+                Result.ResultTuple tuple = new Result.ResultTuple();
+
+                tuple.NodeId = graph.Nodes[i].Id;
+                tuple.Distance = distance[i];
+                tuple.ParentNodeId = graph.Nodes[i].ParentId;
+                tuple.ParentTime = graph.Nodes[i].ParentTime;
+
+                result.ResultTuples.Add(tuple);
+            }
+
+            return result;
+        }
+
+
+    /*    
         // prints the graph to console
         public static int printGraph()
         {
@@ -99,27 +180,12 @@ namespace TagLibrary.DataTypes
                 for (m = 0; m < nodes[n].NumberOfNeighbours(); m++)
                 {
                     Console.Write("\nNode {0}|", a.getEndNode());
-
-                    //Print the time-series for arc.
-                    for (l = 0; l < lenghtOfTimeSeries; l++)
-                        Console.Write(" {0}", tempTravelTimeSeries[l]);
-
-                    //Print the best travel time-series for arc.
-                    Console.Write(" | ");
-                    for (l = 0; l < lenghtOfTimeSeries; l++)
-                        Console.Write(" {0}", tempBestTravelTimeSeries[l]);
-
-                    // point to next arc 
-                    a = a.getArcNext();
-                    tempTravelTimeSeries = a.getTravelTimeSeries();
-                    tempBestTravelTimeSeries = a.getBestTravelTimeSeries();
-                }
             }
             Console.Write("\n");
             return 1;
         }
+        }
 
-        /* APIs to access Graph properties: */
         // Time to reach nth neighbor from node_idx, starting at time 'distance'
         int getWeight(int nodeIndex, int distance, int numberNeighbor)
         {
@@ -159,10 +225,10 @@ namespace TagLibrary.DataTypes
         // Highly incomplete as on 20090412 - Santhosh
         int loadGraph(char[] fileName)
         {
-            /* 1. Open the input modified DIMACS format file.
-             * 2. Parse the file and populate data structures.
-             * 3. Close the file.
-             */
+            // 1. Open the input modified DIMACS format file.
+            // 2. Parse the file and populate data structures.
+             // 3. Close the file.
+             
 
             char[] text = new char(80);
             int letter;
@@ -215,11 +281,11 @@ namespace TagLibrary.DataTypes
                         while (fgetc(f) != '\n') ;
                         break;
                     //if initial occupancy is to be considered
-                    /*
-                    int node_id, nodeCapacity;
-                    fscanf(f," %d %d",&node_id, &nodeCapacity);
-                    node[node_id].init_occupancy = nodeCapacity;
-                    */
+                    //
+                    //int node_id, nodeCapacity;
+                    //fscanf(f," %d %d",&node_id, &nodeCapacity);
+                    //node[node_id].init_occupancy = nodeCapacity;
+                    //
 
                     // edge(arc) information
                     case 'a':
@@ -278,7 +344,7 @@ namespace TagLibrary.DataTypes
                         }
 
 
-                        /* Attach arc to correspoing node */
+                        // Attach arc to correspoing node 
                         if (graph->nodes[nodeIndex].n_neighbors == 0)
                         {
                             graph->nodes[nodeIndex].list_arcs = arc_ptr;
@@ -297,7 +363,298 @@ namespace TagLibrary.DataTypes
             fclose(f);
             // printGraph();
         }
+        */
+    
 
+        #region Accessors
+
+        public Arc GetArc(int nodeId1, int nodeId2, int time)
+        {
+            Node node;
+            Arc arc = null;
+
+            node = this.nodes.Find(item => item.Id == nodeId1);
+
+            if (null != node)
+            {
+                arc = node.Arcs.Find(item => item.EndNode == nodeId2);
+
+                if (null != arc)
+                {
+                    if (!arc.TravelTimeSeries.Exists(item => item == time))
+                        arc = null;
+                }
+            }
+
+            return arc;
+
+        }
+
+        public Arc GetArc(int nodeId1, int nodeId2)
+        {
+            Node node;
+            Arc arc = null;
+
+            node = this.nodes.Find(item => item.Id == nodeId1);
+
+            if (null != node)
+            {
+                arc = node.Arcs.Find(item => item.EndNode == nodeId2);
+            }
+
+            return arc;
+        }
+
+
+
+        public Graph GetGraph()
+        {
+            return this;
+        }
+
+        public Graph GetGraph(int time)
+        {
+            Graph newGraph = new Graph();
+
+            foreach (Node node in this.Nodes)
+            {
+                for (int i = 0; i < node.Arcs.Count; i++)
+                {
+                    if (node.Arcs[i].TravelTimeSeries.Exists(item => item == time))
+                    {
+                        Node tempNode = new Node();
+                        Arc tempArc = new Arc();
+
+                        tempArc.EndNode = node.Arcs[i].EndNode;
+                        tempArc.TravelTimeSeries.Add(time);
+                        tempNode.Arcs.Add(tempArc);
+
+                        newGraph.nodes.Add(tempNode);
+                    }
+                }
+
+            }
+
+            return newGraph;
+        }
+
+        #endregion
+
+        #region Modifiers
+
+        public bool InsertArc(int nodeId1, int nodeId2, int time)
+        {
+            //Node node;
+            //Arc arc;
+            bool result = false;
+            bool isArcFound = false;
+
+            foreach (Node node in this.Nodes)
+            {
+                if (node.Id == nodeId1)
+                {
+                    foreach (Arc arc in node.Arcs)
+                    {
+                        if (arc.EndNode == nodeId2)
+                        {
+                            isArcFound = true;
+                            if (!arc.TravelTimeSeries.Exists(item => item == time))
+                            {
+                                arc.TravelTimeSeries.Add(time);
+                                result = true;
+                            }
+                        }
+                    }
+
+                    if (!isArcFound)
+                    {
+                        node.Arcs.Add(new Arc(nodeId2, time));
+                        result = true;
+                    }
+                }
+            }
+
+
+
+            return result;
+        }
+
+
+        public bool InsertArc(int nodeId1, int nodeId2, List<int> time)
+        {
+            //Node node;
+            //Arc arc;
+            bool result = false;
+            bool isArcFound = false;
+
+            foreach (Node node in this.Nodes)
+            {
+                if (node.Id == nodeId1)
+                {
+                    foreach (Arc arc in node.Arcs)
+                    {
+                        if (arc.EndNode == nodeId2)
+                        {
+                            isArcFound = true;
+                            arc.TravelTimeSeries = time;
+                            result = true;
+                        }
+                    }
+                }
+
+                if (!isArcFound)
+                {
+                    Arc arc = new Arc(nodeId2);
+                    arc.TravelTimeSeries = time;
+                    node.Arcs.Add(arc);
+                    result = true;
+                }
+            }
+
+            return result;
+
+        }
+
+
+        public bool DeleteArc(int nodeId1, int nodeId2, int time)
+        {
+            //Node node;
+            //Arc arc;
+            bool result = false;
+
+            foreach (Node node in this.Nodes)
+            {
+                if (node.Id == nodeId1)
+                {
+                    foreach (Arc arc in node.Arcs)
+                    {
+                        if (arc.EndNode == nodeId2)
+                        {
+                            if (arc.TravelTimeSeries.Exists(item => item == time))
+                            {
+                                arc.TravelTimeSeries.Remove(time);
+                            }
+                        }
+                    }
+
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+
+        public bool DeleteArc(int nodeId1, int nodeId2)
+        {
+            bool result = false;
+            int index;
+
+            foreach (Node node in this.Nodes)
+            {
+                if (node.Id == nodeId1)
+                {
+                    index = node.Arcs.FindIndex(item => item.EndNode == nodeId2);
+                    if (index >= 0)
+                        node.Arcs.RemoveAt(index);
+                    result = true;
+                }
+            }
+
+            return result;
+
+        }
+
+
+        public bool UpdateArc(int nodeId1, int nodeId2, int time)
+        {
+            //Node node;
+            //Arc arc;
+            bool result = false;
+            int nodeIndex, arcIndex, timeIndex;
+
+            nodeIndex = this.Nodes.FindIndex(item => item.Id == nodeId1);
+            if (nodeIndex >=0)
+                {
+                    arcIndex = this.nodes[nodeIndex].Arcs.FindIndex(item => item.EndNode == nodeId2);
+                    if (arcIndex>=0)
+                    {
+                        timeIndex = this.Nodes[nodeIndex].Arcs[arcIndex].TravelTimeSeries.FindIndex(item => item == time);
+                            if (timeIndex >= 0)
+                            {
+                                this.Nodes[nodeIndex].Arcs[arcIndex].TravelTimeSeries[timeIndex] = time;
+                                result = true;
+                            }
+                    }
+                }
+            
+            return result;
+        }
+
+
+        public bool UpdateArc(int nodeId1, int nodeId2)
+        {
+            bool result = false;
+            int index;
+
+            foreach (Node node in this.Nodes)
+            {
+                if (node.Id == nodeId1)
+                {
+                    index = node.Arcs.FindIndex(item => item.EndNode == nodeId2);
+                    if (index >= 0)
+                        node.Arcs.RemoveAt(index);
+                    result = true;
+                }
+            }
+
+            return result;
+
+        }
+
+
+        #endregion
+        
+        #region Predicates
+
+        public bool ArcExists(int nodeId1, int nodeId2, int time)
+        {
+            Node node;
+            Arc arc = null;
+
+            node = this.nodes.Find(item => item.Id == nodeId1);
+
+            if (null != node)
+            {
+                arc = node.Arcs.Find(item => item.EndNode == nodeId2);
+
+                if (null != arc)
+                {
+                    return(arc.TravelTimeSeries.Exists(item => item == time));                        
+                }
+            }
+
+            return false;
+
+        }
+
+        public bool ArcExists(int nodeId1, int nodeId2)
+        {
+            Node node;
+            
+            node = this.nodes.Find(item => item.Id == nodeId1);
+
+            if (null != node)
+            {
+                return node.Arcs.Exists(item => item.EndNode == nodeId2);
+            }
+
+            return false;
+        }
+
+
+
+        #endregion
 
 
     }

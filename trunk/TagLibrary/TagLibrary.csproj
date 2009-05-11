@@ -49,6 +49,7 @@
     <Compile Include="DataTypes\Arc.cs" />
     <Compile Include="DataTypes\Graph.cs" />
     <Compile Include="DataTypes\Node.cs" />
+    <Compile Include="DataTypes\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
