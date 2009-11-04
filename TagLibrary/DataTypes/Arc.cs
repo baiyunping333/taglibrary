@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace TagLibrary.DataTypes
 {
-    class Arc
+    public class Arc
     {
         //TODO: Verify
         private int endNode;

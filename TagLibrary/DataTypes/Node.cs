@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace TagLibrary.DataTypes
 {
-    class Node
+    public class Node
     {
         private int id;
 
@@ -56,7 +56,10 @@ namespace TagLibrary.DataTypes
             set { arcs = value; }
         }
 
-
+        public Node()
+        {
+            arcs = new List<Arc>();
+        }
 
     }
 }

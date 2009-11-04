@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagLibrary", "TagLibrary\TagLibrary.csproj", "{A1BFBFC8-B5EF-44C4-BE38-D1AAFB534E6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication", "ConsoleApplication\ConsoleApplication.csproj", "{7540F32A-7976-4443-BF39-B78F29B2EED7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{A1BFBFC8-B5EF-44C4-BE38-D1AAFB534E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1BFBFC8-B5EF-44C4-BE38-D1AAFB534E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1BFBFC8-B5EF-44C4-BE38-D1AAFB534E6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7540F32A-7976-4443-BF39-B78F29B2EED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7540F32A-7976-4443-BF39-B78F29B2EED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7540F32A-7976-4443-BF39-B78F29B2EED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7540F32A-7976-4443-BF39-B78F29B2EED7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
