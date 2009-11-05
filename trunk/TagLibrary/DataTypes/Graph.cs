@@ -31,17 +31,15 @@ namespace TagLibrary.DataTypes
         public void PreProcessArc(ref Arc edge)
         {
             int minWeight, minWeightIndex;
-            int timeSeriesLength = this.LenghtOfTimeSeries;
 
             minWeight = 10000;
             minWeightIndex = -1;
 
-            edge.BestTravelTimeSeries[timeSeriesLength - 1] = -1;
+            edge.BestTravelTimeSeries[LenghtOfTimeSeries - 1] = -1;
 
-            int j;
-            for (j = timeSeriesLength - 1; j >= 0; j--)
+            for (int j = LenghtOfTimeSeries - 1; j >= 0; j--)
             {
-                if (edge.TravelTimeSeries[j] != -1 && minWeight > (edge.TravelTimeSeries[j] + (j + 1)))
+                if (edge.TravelTimeSeries[j] != -1 && (minWeight > (edge.TravelTimeSeries[j] + (j + 1))))
                 {
                     minWeight = edge.TravelTimeSeries[j] + (j + 1);
                     minWeightIndex = j;
@@ -67,25 +65,27 @@ namespace TagLibrary.DataTypes
 
         public void shortestPaths(int startNodeID)
         {
-            int i, j;                                    /* counters */
-            int[] visited = new int[Nodes.Count];      /* is the node visited? */
-            int[] distance = new int[Nodes.Count];     /* minimum distance(time) to each node from start node*/
-            int[] parent = new int[Nodes.Count];       /* previous node to reach the current node*/
-            //int[] parent_wait new int[Nodes.Count];  /* waiting time at parent node */
-            int v;                                       /* current vertex to process */
-            int w;                                       /* candidate next vertex */
-            int weight;                                  /* edge weight */
-            int dist;                                    /* best current distance from start */
+            int i, j;                         /* counters */
+            int[] visited = new int[Nodes.Count];     /* is the node visited? */
+            int[] distance = new int[Nodes.Count];    /* minimum distance(time) to each node from start node*/
+            int[] parent = new int[Nodes.Count];      /* previous node to reach the current node*/
+            //int[] parent_wait = new int[Nodes.Count]; /* waiting time at parent node */
+            int v;                           /* current vertex to process */
+            int w;                           /* candidate next vertex */
+            int weight;                      /* edge weight */
+            int dist;                        /* best current distance from start */
 
             for (i = 0; i < Nodes.Count; i++)
             {
                 visited[i] = 0;
                 distance[i] = 10000; //INFINITY;
-                parent[i] = -1; //parent_wait[i] = 0;
+                parent[i] = -1;
+                //parent_wait[i] = 0;
             }
 
             int start = GetNodeIndex(startNodeID, this);
             List<Arc> aList;
+            Arc a;
             distance[start] = 1;
             v = start;
 
@@ -93,12 +93,11 @@ namespace TagLibrary.DataTypes
             {
                 visited[v] = 1;
                 aList = Nodes[v].Arcs;
+
                 //printf(" Examining Node: %d \n", graph->nodes[v].id);
-                
-                //for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
-                //I am assuming there will be "number of neighbours" ars for the nodes[v]
-                foreach( Arc a in aList)
+                for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
                 {
+                    a = aList[i];
                     w = GetNodeIndex(a.EndNode, this);
 
                     weight = GetWeight(v, distance[v], i);
@@ -112,7 +111,7 @@ namespace TagLibrary.DataTypes
                             //parent_wait[w] = parent_wait[v];
                             parent[w] = v;
                             Nodes[w].ParentId = Nodes[v].Id;
-                            Nodes[w].ParentId = distance[v];
+                            Nodes[w].ParentTime = distance[v];
                             //printf("Weight is less than current minimum\n");
                         }
                     }
@@ -128,11 +127,12 @@ namespace TagLibrary.DataTypes
                     }
             }
 
-            Console.WriteLine("Start End Dist Parent ParentTime");
+            StreamWriter file = new StreamWriter("output.csv", true);
+            file.WriteLine("Start,End,Dist,Parent,ParentTime");
             for (i = 0; i < Nodes.Count; i++)
-                Console.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
+                file.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
+            file.Close();
         }
-
 
         /*    
             // prints the graph to console
@@ -740,9 +740,9 @@ namespace TagLibrary.DataTypes
             foreach( Arc aTemp in arcs)
             {
                 a = aTemp;
-                nNeighbor--;
                 if( nNeighbor == 0)
                     break;
+                nNeighbor--;
             }
 
             // printf("starts at %d Arc ends at: %d :: Time %d\n",node_idx , a->end, distance);
@@ -824,7 +824,8 @@ namespace TagLibrary.DataTypes
                             {
                                node1 = new Node();
                                node1.Id = int.Parse(tempArcLine[1]);
-                               this.Nodes.Add(node1);                               
+                               node1.NumberOfNeighbours = 0;
+                               this.Nodes.Add(node1);    
                             }
 
                             node2 = this.nodes.Find(item => item.Id == int.Parse(tempArcLine[2]));
@@ -833,6 +834,7 @@ namespace TagLibrary.DataTypes
                             {
                                 node2 = new Node();
                                 node2.Id = int.Parse(tempArcLine[2]);
+                                node2.NumberOfNeighbours = 0;
                                 this.Nodes.Add(node2);
                             }
 
@@ -846,6 +848,7 @@ namespace TagLibrary.DataTypes
                             }
                             PreProcessArc(ref tempArc);
                             node1.Arcs.Add(tempArc);
+                            node1.NumberOfNeighbours++;
                             
                         }                       
 

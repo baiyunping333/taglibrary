@@ -12,7 +12,7 @@ namespace ConsoleApplication
         {
 
             Graph graph = new Graph();
-            graph.LenghtOfTimeSeries = 3;
+            /*graph.LenghtOfTimeSeries = 3;
             
             Arc arc1 = new Arc();
             arc1.TravelTimeSeries.Add(1);
@@ -58,12 +58,16 @@ namespace ConsoleApplication
             graph.Nodes.Add(node1);
             graph.Nodes.Add(node2);
             graph.Nodes.Add(node3);
-            graph.Nodes.Add(node4);
+            graph.Nodes.Add(node4);*/
 
-            graph.shortestPaths(1);
-            /*Program program = new Program();
-            graph.LoadGraph("E:\\chintan\\MS\\UMN\\Courses\\Spring09\\SpatialDB\\tag_code\\data\\mpl05");
-            program.PrintGraph(graph);*/
+            
+            Program program = new Program();
+            graph.LoadGraph("..\\..\\..\\myData");
+            program.PrintGraph(graph);
+
+            for(int i=0; i<graph.Nodes.Count; i++)
+                graph.shortestPaths(i+1);
+            //Console.ReadKey();
         }
 
         public void PrintGraph(Graph graph)
@@ -74,12 +78,14 @@ namespace ConsoleApplication
 
                 foreach (Arc arc in node.Arcs)
                 {
-                    Console.WriteLine(arc.TravelTimeSeries.ToArray().ToString());
+                    foreach( int ts in arc.TravelTimeSeries)
+                        Console.Write(string.Format("{0}, ",ts.ToString()));
+                    Console.Write("\n");
                 }
             
             }
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
