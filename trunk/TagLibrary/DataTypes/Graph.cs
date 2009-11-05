@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace TagLibrary.DataTypes
 {
@@ -62,45 +63,43 @@ namespace TagLibrary.DataTypes
             return -1;
         }
 
-        public Result ShortestPaths(int startNodeId, Graph graph)
+        void shortestPaths(int startNodeID)
         {
-            int i, j;                         /* counters */
-            bool[] visited;     /* is the node visited? */
-            int[] distance;    /* minimum distance(time) to each node from start node*/
-            int[] parent;      /* previous node to reach the current node*/
-            //int parent_wait[graph->n_nodes]; /* waiting time at parent node */
-            int v;                           /* current vertex to process */
-            int w;                           /* candidate next vertex */
-            int weight;                      /* edge weight */
-            int dist;                        /* best current distance from start */
+            int i, j;                                    /* counters */
+            int[] visited = new int[Nodes.Count];      /* is the node visited? */
+            int[] distance = new int[Nodes.Count];     /* minimum distance(time) to each node from start node*/
+            int[] parent = new int[Nodes.Count];       /* previous node to reach the current node*/
+            //int[] parent_wait new int[Nodes.Count];  /* waiting time at parent node */
+            int v;                                       /* current vertex to process */
+            int w;                                       /* candidate next vertex */
+            int weight;                                  /* edge weight */
+            int dist;                                    /* best current distance from start */
 
-            visited = new bool[graph.Nodes.Count];
-            distance = new int[graph.Nodes.Count];
-            parent = new int[graph.Nodes.Count];
-
-            for (i = 0; i < graph.Nodes.Count; i++)
+            for (i = 0; i < Nodes.Count; i++)
             {
-                visited[i] = false;
-                distance[i] = 32000; //INFINITY;
-                parent[i] = -1;
+                visited[i] = FALSE;
+                distance[i] = 10000; //INFINITY;
+                parent[i] = -1; //parent_wait[i] = 0;
             }
 
-            int start = GetNodeIndex(startNodeId, graph);
-            List<Arc> a;
+            int start = GetNodeIndex(startNodeID);
+            List<Arc> aList;
             distance[start] = 1;
             v = start;
 
-            while (visited[v] == false)
+            while (visited[v] == FALSE)
             {
-                visited[v] = true;
-                a = graph.Nodes[v].Arcs;
+                visited[v] = TRUE;
+                aList = Nodes[v].Arcs;
                 //printf(" Examining Node: %d \n", graph->nodes[v].id);
-                for (i = 0; i < graph.Nodes[v].NumberOfNeighbours; i++)
+                
+                //for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
+                //I am assuming there will be "number of neighbours" ars for the nodes[v]
+                foreach( Arc a in aList)
                 {
-                    w = GetNodeIndex(a[i].EndNode, graph);
-                    //TODO: remove
-                    // weight = getWeight(v, distance[v], i);
-                    weight = 1;
+                    w = GetNodeIndex(a.EndNode);
+
+                    weight = GetWeight(v, distance[v], i);
                     //printf("%d, %d, %d\t", a->end, distance[v], weight);
 
                     if (weight != -1)
@@ -110,40 +109,25 @@ namespace TagLibrary.DataTypes
                             distance[w] = distance[v] + weight;
                             //parent_wait[w] = parent_wait[v];
                             parent[w] = v;
-                            graph.Nodes[w].ParentId = graph.Nodes[v].Id;
-                            graph.Nodes[w].ParentTime = distance[v];
+                            Nodes[w].ParentId = Nodes[v].Id;
+                            Nodes[w].ParentId = distance[v];
                             //printf("Weight is less than current minimum\n");
                         }
                     }
                 }
 
                 //v = 1;
-                dist = 32000; //INFINITY;
-                for (i = 0; i < graph.Nodes.Count; i++)
-                    if ((visited[i] == false) && (dist > distance[i]))
+                dist = 10000; //INFINITY;
+                for (i = 0; i < Nodes.Count; i++)
+                    if ((visited[i] == FALSE) && (dist > distance[i]))
                     {
                         dist = distance[i];
                         v = i;
                     }
             }
 
-            Result result = new Result();
-
-            result.StartNodeId = startNodeId;
-
-            for (i = 0; i < graph.Nodes.Count; i++)
-            {
-                Result.ResultTuple tuple = new Result.ResultTuple();
-
-                tuple.NodeId = graph.Nodes[i].Id;
-                tuple.Distance = distance[i];
-                tuple.ParentNodeId = graph.Nodes[i].ParentId;
-                tuple.ParentTime = graph.Nodes[i].ParentTime;
-
-                result.ResultTuples.Add(tuple);
-            }
-
-            return result;
+            for (i = 0; i < Nodes.Count; i++)
+                Console.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
         }
 
 
@@ -742,6 +726,41 @@ namespace TagLibrary.DataTypes
             }
 
             return false;
+        }
+
+        // Time to reach nth neighbor from node_idx, starting at time 'distance'
+        public int GetWeight(int nodeId, int distance, int nNeighbor)
+        {
+            //   printf("\nNode ID: %d %d %d\n",node_idx, distance, n_neighbor);
+            List<Arc> arcs = Nodes[nodeId].Arcs;
+            Arc a;
+            foreach( Arc aTemp in arcs)
+            {
+                a = aTemp;
+                if( --nNeighbor == 0)
+                    break;
+            }
+
+            // printf("starts at %d Arc ends at: %d :: Time %d\n",node_idx , a->end, distance);
+            int time_series_index = distance - 1;
+            if (time_series_index >= LenghtOfTimeSeries)
+                return -1;
+            int wait = 0;
+            while (a.BestTravelTimeSeries[time_series_index] == -1)
+            {
+                time_series_index++;
+                wait++;
+            }
+            
+            //check for bounds
+            if (time_series_index > LenghtOfTimeSeries)
+                return -1;
+            else
+            {
+                //the weight should also include the waiting period at the node.
+                // printf("Index and Weight: %d %d\n",time_series_index, a->best_travel_time_series[time_series_index]+wait);
+                return a.TravelTimeSeries[a.BestTravelTimeSeries[time_series_index]] + wait;
+            }
         }
 
 
