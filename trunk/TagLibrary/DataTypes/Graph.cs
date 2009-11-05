@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using System;
+using System.IO;
+using System; 
+
 
 namespace TagLibrary.DataTypes
 {
@@ -767,6 +769,98 @@ namespace TagLibrary.DataTypes
 
         #endregion
 
+
+        public bool LoadGraph (string filePath)
+        {
+            try
+            {
+
+
+                if (File.Exists(filePath))
+                {
+
+                    FileStream file = new FileStream(filePath, FileMode.Open);
+                    int numberofArcs=0;
+                    StreamReader streamReader = new StreamReader(file);
+
+                    while (!streamReader.EndOfStream)
+                    {
+                        string line = streamReader.ReadLine();
+                        if (line.StartsWith("c") || line.StartsWith("n"))
+                        {
+                            continue;
+                        }
+                        else if (line.StartsWith("p"))
+                        {
+                            string[] graphInfo = line.Split(' ');
+                            if (graphInfo.Length > 4)
+                            {
+                                if (graphInfo[4] != null)
+                                {
+                                    this.LenghtOfTimeSeries = int.Parse(graphInfo[4]);
+                                }
+                                else
+                                {
+                                    this.LenghtOfTimeSeries = 0;
+                                }
+                            }
+                            if (graphInfo[3] != null)
+                            {
+                                numberofArcs = int.Parse(graphInfo[3]);
+                            }
+                        }
+                        else if (line.StartsWith("a"))
+                        {
+                            string[] tempArcLine = line.Split(' ');
+
+
+                            Node node1, node2;
+
+                            node1 = this.nodes.Find(item => item.Id == int.Parse(tempArcLine[1]));
+
+                            if (null == node1)
+                            {
+                               node1 = new Node();
+                               node1.Id = int.Parse(tempArcLine[1]);
+                               this.Nodes.Add(node1);                               
+                            }
+
+                            node2 = this.nodes.Find(item => item.Id == int.Parse(tempArcLine[2]));
+
+                            if (null == node2)
+                            {
+                                node2 = new Node();
+                                node2.Id = int.Parse(tempArcLine[2]);
+                                this.Nodes.Add(node2);
+                            }
+
+                            Arc tempArc = new Arc();
+                            tempArc.EndNode = node2.Id;
+
+                            for (int i = 3; i < tempArcLine.Length; i++)
+                            {
+                                tempArc.TravelTimeSeries.Add(int.Parse(tempArcLine[i]));   
+                            }
+
+                            node1.Arcs.Add(tempArc);
+                            
+                        }                       
+
+                    }
+                    streamReader.Close();
+                    return true;
+                }
+
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

@@ -1,0 +1,7 @@
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\obj\Debug\ResolveAssemblyReference.cache
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\bin\Debug\ConsoleApplication.exe
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\bin\Debug\ConsoleApplication.pdb
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\bin\Debug\TagLibrary.dll
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\bin\Debug\TagLibrary.pdb
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\obj\Debug\ConsoleApplication.exe
+E:\chintan\MS\UMN\Courses\Spring09\SpatialDB\TAGLibrary\ConsoleApplication\obj\Debug\ConsoleApplication.pdb
