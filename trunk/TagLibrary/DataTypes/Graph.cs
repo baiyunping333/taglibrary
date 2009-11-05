@@ -28,10 +28,10 @@ namespace TagLibrary.DataTypes
 
 
         //Preprocess to store the greedy choice for non FIFO
-        public void PreProcessArc(Arc edge, Graph graph)
+        public void PreProcessArc(ref Arc edge)
         {
             int minWeight, minWeightIndex;
-            int timeSeriesLength = graph.LenghtOfTimeSeries;
+            int timeSeriesLength = this.LenghtOfTimeSeries;
 
             minWeight = 10000;
             minWeightIndex = -1;
@@ -841,9 +841,10 @@ namespace TagLibrary.DataTypes
 
                             for (int i = 3; i < tempArcLine.Length; i++)
                             {
-                                tempArc.TravelTimeSeries.Add(int.Parse(tempArcLine[i]));   
+                                tempArc.TravelTimeSeries.Add(int.Parse(tempArcLine[i]));
+                                tempArc.BestTravelTimeSeries.Add(-1);
                             }
-
+                            PreProcessArc(ref tempArc);
                             node1.Arcs.Add(tempArc);
                             
                         }                       
