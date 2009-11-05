@@ -65,7 +65,7 @@ namespace TagLibrary.DataTypes
             return -1;
         }
 
-        void shortestPaths(int startNodeID)
+        public void shortestPaths(int startNodeID)
         {
             int i, j;                                    /* counters */
             int[] visited = new int[Nodes.Count];      /* is the node visited? */
@@ -128,6 +128,7 @@ namespace TagLibrary.DataTypes
                     }
             }
 
+            Console.WriteLine("Start End Dist Parent ParentTime");
             for (i = 0; i < Nodes.Count; i++)
                 Console.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
         }
@@ -739,7 +740,8 @@ namespace TagLibrary.DataTypes
             foreach( Arc aTemp in arcs)
             {
                 a = aTemp;
-                if( --nNeighbor == 0)
+                nNeighbor--;
+                if( nNeighbor == 0)
                     break;
             }
 
