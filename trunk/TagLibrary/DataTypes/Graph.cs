@@ -77,19 +77,19 @@ namespace TagLibrary.DataTypes
 
             for (i = 0; i < Nodes.Count; i++)
             {
-                visited[i] = FALSE;
+                visited[i] = 0;
                 distance[i] = 10000; //INFINITY;
                 parent[i] = -1; //parent_wait[i] = 0;
             }
 
-            int start = GetNodeIndex(startNodeID);
+            int start = GetNodeIndex(startNodeID, this);
             List<Arc> aList;
             distance[start] = 1;
             v = start;
 
-            while (visited[v] == FALSE)
+            while (visited[v] == 0)
             {
-                visited[v] = TRUE;
+                visited[v] = 1;
                 aList = Nodes[v].Arcs;
                 //printf(" Examining Node: %d \n", graph->nodes[v].id);
                 
@@ -97,7 +97,7 @@ namespace TagLibrary.DataTypes
                 //I am assuming there will be "number of neighbours" ars for the nodes[v]
                 foreach( Arc a in aList)
                 {
-                    w = GetNodeIndex(a.EndNode);
+                    w = GetNodeIndex(a.EndNode, this);
 
                     weight = GetWeight(v, distance[v], i);
                     //printf("%d, %d, %d\t", a->end, distance[v], weight);
@@ -119,7 +119,7 @@ namespace TagLibrary.DataTypes
                 //v = 1;
                 dist = 10000; //INFINITY;
                 for (i = 0; i < Nodes.Count; i++)
-                    if ((visited[i] == FALSE) && (dist > distance[i]))
+                    if ((visited[i] == 0) && (dist > distance[i]))
                     {
                         dist = distance[i];
                         v = i;
@@ -733,7 +733,7 @@ namespace TagLibrary.DataTypes
         {
             //   printf("\nNode ID: %d %d %d\n",node_idx, distance, n_neighbor);
             List<Arc> arcs = Nodes[nodeId].Arcs;
-            Arc a;
+            Arc a = new Arc();
             foreach( Arc aTemp in arcs)
             {
                 a = aTemp;
