@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,12 +63,19 @@ namespace ConsoleApplication
 
             
             Program program = new Program();
-            graph.LoadGraph("..\\..\\..\\myData");
-            program.PrintGraph(graph);
+            graph.LoadGraph("..\\..\\..\\mpl30_1_5_100_2");
+            //program.PrintGraph(graph);
 
-            for(int i=0; i<graph.Nodes.Count; i++)
-                graph.shortestPaths(i+1);
+            StreamWriter file = new StreamWriter("output.csv", true);
+            file.WriteLine("Origin, Destination, Distance, Previous Node, Reached Previous Node at");
+            for (int i = 0; i < graph.Nodes.Count; i++)
+            {
+                if( i%100 == 0)
+                    Console.WriteLine(string.Format("Processing node {0} of {1}", i, graph.Nodes.Count-1));
+                graph.ShortestPaths(i + 1, file);
+            }
             //Console.ReadKey();
+            file.Close();
         }
 
         public void PrintGraph(Graph graph)
