@@ -30,9 +30,8 @@ namespace TagLibrary.DataTypes
         //Preprocess to store the greedy choice for non FIFO
         public void PreProcessArc(ref Arc edge)
         {
-            int minWeight, minWeightIndex;
-
-            minWeight = 10000;
+            int minWeightIndex;
+            float minWeight = 10000;
             minWeightIndex = -1;
 
             edge.BestTravelTimeSeries[LenghtOfTimeSeries - 1] = -1;
@@ -63,7 +62,7 @@ namespace TagLibrary.DataTypes
             return -1;
         }
 
-        public void shortestPaths(int startNodeID)
+        public void ShortestPaths(int startNodeID, StreamWriter file)
         {
             int i, j;                         /* counters */
             int[] visited = new int[Nodes.Count];     /* is the node visited? */
@@ -127,11 +126,11 @@ namespace TagLibrary.DataTypes
                     }
             }
 
-            StreamWriter file = new StreamWriter("output.csv", true);
-            file.WriteLine("Start,End,Dist,Parent,ParentTime");
             for (i = 0; i < Nodes.Count; i++)
+            {
                 file.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
-            file.Close();
+                //Console.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
+            }
         }
 
         /*    
@@ -737,6 +736,9 @@ namespace TagLibrary.DataTypes
             //   printf("\nNode ID: %d %d %d\n",node_idx, distance, n_neighbor);
             List<Arc> arcs = Nodes[nodeId].Arcs;
             Arc a = new Arc();
+            //if(nNeighbor+1 <= arcs.Count)
+            //a = arcs[nNeighbor];
+            //else a=arcs[arcs.Count-1];
             foreach( Arc aTemp in arcs)
             {
                 a = aTemp;
@@ -843,7 +845,8 @@ namespace TagLibrary.DataTypes
 
                             for (int i = 3; i < tempArcLine.Length; i++)
                             {
-                                tempArc.TravelTimeSeries.Add(int.Parse(tempArcLine[i]));
+                                tempArc.TravelTimeSeries.Add(Convert.ToInt16(Convert.ToDouble(tempArcLine[i])));
+                                //tempArc.TravelTimeSeries.Add(int.Parse(tempArcLine[i]));
                                 tempArc.BestTravelTimeSeries.Add(-1);
                             }
                             PreProcessArc(ref tempArc);

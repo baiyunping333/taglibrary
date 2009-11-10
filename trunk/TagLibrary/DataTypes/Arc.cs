@@ -55,10 +55,9 @@ namespace TagLibrary.DataTypes
 
         public Arc(int endNode, int time)
         {
-            this.EndNode = endNode;            
+            this.EndNode = endNode;
             this.TravelTimeSeries = new List<int>();
             this.TravelTimeSeries.Add(time);
-
             this.BestTravelTimeSeries = new List<int>();
         }
     }
