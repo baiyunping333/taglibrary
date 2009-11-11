@@ -32,6 +32,7 @@ namespace TagLibrary.DataTypes
             set { numberOfNeighbours = value; }
         }
 
+        // 20091110 - Santhosh - Have to check!
         private int parentId;
 
         public int ParentId
@@ -40,6 +41,7 @@ namespace TagLibrary.DataTypes
             set { parentId = value; }
         }
 
+        // 20091110 - Santhosh - Have to check!
         private int parentTime;
 
         public int ParentTime

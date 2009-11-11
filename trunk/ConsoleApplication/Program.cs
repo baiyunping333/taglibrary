@@ -63,7 +63,7 @@ namespace ConsoleApplication
 
             
             Program program = new Program();
-            graph.LoadGraph("..\\..\\..\\mpl30_1_5_100_2");
+            graph.LoadGraph("..\\..\\..\\myData");
             //program.PrintGraph(graph);
 
             StreamWriter file = new StreamWriter("output.csv", true);
