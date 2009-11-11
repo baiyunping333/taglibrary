@@ -16,15 +16,7 @@ namespace TagLibrary.DataTypes
             get { return endNode; }
             set { endNode = value; }
         }
-        //TODO: Verify
-        private Arc arcNext;
-
-        internal Arc ArcNext
-        {
-            get { return arcNext; }
-            set { arcNext = value; }
-        }
-
+       
         private List<int> travelTimeSeries;
 
         public List<int> TravelTimeSeries
@@ -53,6 +45,7 @@ namespace TagLibrary.DataTypes
             this.BestTravelTimeSeries = new List<int>();
         }
 
+        // 20091110 - Santhosh - Have to check!
         public Arc(int endNode, int time)
         {
             this.EndNode = endNode;
