@@ -135,6 +135,18 @@ namespace TagLibrary.DataTypes
 
         #region Accessors
 
+        public Node GetNode(int nodeId1, int time)
+        {
+            // Current structure does not handle time
+            return this.nodes.Find(item => item.Id == nodeId1);
+        }
+
+        public Node GetNode(int nodeId1)
+        {
+            // Current structure does not handle time
+            return this.nodes.Find(item => item.Id == nodeId1);
+        }
+
         public Arc GetArc(int nodeId1, int nodeId2, int time)
         {
             Node node;
@@ -209,7 +221,36 @@ namespace TagLibrary.DataTypes
 
         #region Modifiers
 
-        public bool InsertArc(int nodeId1, int nodeId2, int time)
+        public bool InsertNode(int nodeId1)
+        {
+            if (!NodeExists(nodeId1))
+            {
+                Node node1 = new Node();
+                node1.Id = nodeId1;
+                node1.NumberOfNeighbours = 0;
+                this.Nodes.Add(node1); 
+                return true;
+            }
+            // Node already exists
+            return false;
+        }
+
+        public bool DeleteNode(int nodeId1)
+        {
+            Node node = GetNode(nodeId1);
+            if (node != null)
+            {
+                node.Arcs.Clear();
+                this.Nodes.Remove(node);
+                return true;
+            }
+            // Node not found
+            return false;
+        }
+
+       // This needs to be changed.. time just represents the index on the time series..
+       // have one more parameter in the arguments that tells the value of time..
+       public bool InsertArc(int nodeId1, int nodeId2, int time)
         {
             //Node node;
             //Arc arc;
@@ -484,6 +525,14 @@ namespace TagLibrary.DataTypes
         #endregion
 
         #region Predicates
+
+        public bool NodeExists(int nodeId1)
+        { 
+            if(GetNode(nodeId1) != null)
+                return true;
+            else
+                return false;
+        }
 
         public bool ArcExists(int nodeId1, int nodeId2, int time)
         {
