@@ -11,89 +11,84 @@ namespace ConsoleApplication
     {
         static void Main(string[] args)
         {
-
+            // Members
             Graph graph = new Graph();
-            /*graph.LenghtOfTimeSeries = 3;
-            
-            Arc arc1 = new Arc();
-            arc1.TravelTimeSeries.Add(1);
-            arc1.TravelTimeSeries.Add(1);
-            arc1.TravelTimeSeries.Add(-1);
-            arc1.EndNode = 2;
-
-            Arc arc2 = new Arc();
-            arc2.TravelTimeSeries.Add(2);
-            arc2.TravelTimeSeries.Add(2);
-            arc2.TravelTimeSeries.Add(3);
-            arc2.EndNode = 4;
-
-            Arc arc3 = new Arc();
-            arc3.TravelTimeSeries.Add(1);
-            arc3.TravelTimeSeries.Add(-1);
-            arc3.TravelTimeSeries.Add(4);
-            arc3.EndNode = 4;
-
-            Arc arc4 = new Arc();
-            arc4.TravelTimeSeries.Add(2);
-            arc4.TravelTimeSeries.Add(2);
-            arc4.TravelTimeSeries.Add(2);
-            arc4.EndNode = 3;
-
-
-            Node node1 = new Node();
-            node1.Id = 1;
-            node1.Arcs.Add(arc1);
-            node1.Arcs.Add(arc4);
-
-            Node node2 = new Node();
-            node2.Id = 2;
-            node2.Arcs.Add(arc2);
-
-            Node node3 = new Node();
-            node3.Id = 3;
-            node3.Arcs.Add(arc3);
-
-            Node node4 = new Node();
-            node4.Id = 4;
-
-            graph.Nodes.Add(node1);
-            graph.Nodes.Add(node2);
-            graph.Nodes.Add(node3);
-            graph.Nodes.Add(node4);*/
-
-            
             Program program = new Program();
-            graph.LoadGraph("..\\..\\..\\myData");
-            //program.PrintGraph(graph);
 
+            // Initialize Logger
+            StreamWriter logger = new StreamWriter("log.txt");
+            if (logger != null)
+                program.LogFile("Testing TAG Library", "Comment", logger);
+            else
+            {
+                program.LogFile("Initializing logger file", "Fail", logger);
+                return;
+            }
+ 
+            // Load graph from DIMACS file
+            program.LogFile("Loading DIMACS graph file myData", "Comment", logger);
+            if (graph.LoadGraph("..\\..\\..\\myData"))
+                program.LogFile("Loading graph from DIMACS file", "Pass", logger);
+            else
+                program.LogFile("Loading graph from DIMACS file", "Fail", logger);
+
+            // Printing the graph
+            program.LogFile("Printing the graph", "Comment", logger);
+            graph.PrintGraph();
+            program.LogFile("Printing the graph", "Pass", logger);
+            
+            // Check existence of node 1
+
+            // Check existence of node 2
+
+            // Create a node 2
+
+            // Check for arc between 1 and 2
+
+            // Insert arc between 1 and 2
+
+            // Shortest path between given node and all other nodes
+            program.LogFile("Finding shortest path between given node to all other node", "Comment", logger);
+            program.LogFile("Creating output file for shortest path", "Comment", logger);
             StreamWriter file = new StreamWriter("output.csv", true);
             file.WriteLine("Origin, Destination, Distance, Previous Node, Reached Previous Node at");
             for (int i = 0; i < graph.Nodes.Count; i++)
             {
-                if( i%100 == 0)
-                    Console.WriteLine(string.Format("Processing node {0} of {1}", i, graph.Nodes.Count-1));
+                if (i % 100 == 0)
+                    Console.WriteLine(string.Format("Processing node {0} of {1}", i, graph.Nodes.Count - 1));
                 graph.ShortestPaths(i + 1, file);
             }
-            //Console.ReadKey();
             file.Close();
+            // Check if the path is correct then
+            program.LogFile("Finding shortest path between given node to all other node", "Pass", logger);
+            // else
+            //program.LogFile("Finding shortest path between given node to all other node", "Fail", logger);
+
+            // Close Logger
+            program.LogFile("", "Close", logger);
+            logger.Close();
         }
 
-        public void PrintGraph(Graph graph)
+        public void LogFile(string comment, string status, StreamWriter logger)
         {
-            foreach (Node node in graph.Nodes)
-            {
-                Console.WriteLine(node.Id);
-
-                foreach (Arc arc in node.Arcs)
-                {
-                    foreach( int ts in arc.TravelTimeSeries)
-                        Console.Write(string.Format("{0}, ",ts.ToString()));
-                    Console.Write("\n");
-                }
-            
+            switch (status)
+            { 
+                case "Comment":
+                    logger.WriteLine(string.Format("{0:HH:mm:ss} - C - {1}.", DateTime.Now, comment));
+                    Console.WriteLine(string.Format("{0:HH:mm:ss} - C - {1}.", DateTime.Now, comment));
+                    break;
+                case "Pass":
+                    logger.WriteLine(string.Format("{0:HH:mm:ss} - P - Successfully passed {1}.", DateTime.Now, comment));
+                    Console.WriteLine(string.Format("{0:HH:mm:ss} - P - Successfully passed {1}.", DateTime.Now, comment));
+                    break;
+                case "Fail":
+                    logger.WriteLine(string.Format("{0:HH:mm:ss} - F - Failed {1}.", DateTime.Now, comment));
+                    Console.WriteLine(string.Format("{0:HH:mm:ss} - F - Failed {1}.", DateTime.Now, comment));
+                    break;
+                case "Close":
+                    logger.WriteLine(string.Format("{0:HH:mm:ss} - C - Finishing the test.", DateTime.Now));
+                    break;
             }
-
-            //Console.ReadKey();
         }
     }
 }
