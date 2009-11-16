@@ -603,6 +603,20 @@ namespace TagLibrary.DataTypes
             }
         }
 
+        public void PrintGraph()
+        {
+            foreach (Node node in this.Nodes)
+            {
+                Console.WriteLine(node.Id);
+                foreach (Arc arc in node.Arcs)
+                {
+                    foreach (int ts in arc.TravelTimeSeries)
+                        Console.Write(string.Format("{0}, ", ts.ToString()));
+                    Console.Write("\n");
+                }
+
+            }
+        }
 
         public bool LoadGraph (string filePath)
         {
