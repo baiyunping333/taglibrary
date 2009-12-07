@@ -63,5 +63,29 @@ namespace TagLibrary.DataTypes
             arcs = new List<Arc>();
         }
 
+        public bool addArc(Arc a)
+        {
+            // check if the arc exists already
+            if( ! arcs.Exists(item => item.EndNode == a.EndNode))
+            {
+                Arcs.Add(a);
+                NumberOfNeighbours++;
+                return true;
+            }
+            else return false;
+        }
+
+        public bool removeArc(Arc a)
+        {
+            // check if the arc already
+            if (arcs.Exists(item => item.EndNode == a.EndNode))
+            {
+                arcs.Remove(a);
+                NumberOfNeighbours--;
+                return true;
+            }
+            else return false;
+        }
+
     }
 }

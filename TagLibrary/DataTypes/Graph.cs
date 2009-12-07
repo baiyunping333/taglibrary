@@ -51,12 +51,12 @@ namespace TagLibrary.DataTypes
 
         // return the index of 'nodeId' from the list of nodes;
         // if nodeId not in the list , return -1.
-        public int GetNodeIndex(int nodeId, Graph graph)
+        public int GetNodeIndex(int nodeId)
         {
             int i;
 
-            for (i = 0; i < graph.Nodes.Count; i++)
-                if (graph.Nodes[i].Id == nodeId)
+            for (i = 0; i < Nodes.Count; i++)
+                if (Nodes[i].Id == nodeId)
                     return i;
 
             return -1;
@@ -82,7 +82,7 @@ namespace TagLibrary.DataTypes
                 //parent_wait[i] = 0;
             }
 
-            int start = GetNodeIndex(startNodeID, this);
+            int start = GetNodeIndex(startNodeID);
             List<Arc> aList;
             Arc a;
             distance[start] = 1; // Santhosh - why this has to be 1.. cant it be 0??
@@ -97,7 +97,7 @@ namespace TagLibrary.DataTypes
                 for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
                 {
                     a = aList[i];
-                    w = GetNodeIndex(a.EndNode, this);
+                    w = GetNodeIndex(a.EndNode);
 
                     weight = GetWeight(v, distance[v], i);
                     //printf("%d, %d, %d\t", a->end, distance[v], weight);
@@ -154,9 +154,9 @@ namespace TagLibrary.DataTypes
                 //parent_wait[i] = 0;
             }
 
-            int start = GetNodeIndex(startNodeID, this);
+            int start = GetNodeIndex(startNodeID);
             // check start is valid
-            int dest = GetNodeIndex(endNodeID, this);
+            int dest = GetNodeIndex(endNodeID);
             // check dest is valid
 
             List<Arc> aList;
@@ -173,7 +173,7 @@ namespace TagLibrary.DataTypes
                 for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
                 {
                     a = aList[i];
-                    w = GetNodeIndex(a.EndNode, this);
+                    w = GetNodeIndex(a.EndNode);
 
                     weight = GetWeight(v, distance[v], i);
                     //printf("%d, %d, %d\t", a->end, distance[v], weight);
@@ -328,6 +328,18 @@ namespace TagLibrary.DataTypes
             {
                 node.Arcs.Clear();
                 this.Nodes.Remove(node);
+                return true;
+            }
+            // Node not found
+            return false;
+        }
+
+        public bool DeleteNode(int nodeId1, int t)
+        {
+            Node node = GetNode(nodeId1);
+            if (node != null)
+            {
+                // set the time series of node at time t to -1;
                 return true;
             }
             // Node not found

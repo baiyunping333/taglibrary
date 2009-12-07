@@ -38,14 +38,29 @@ namespace ConsoleApplication
             program.LogFile("Printing the graph", "Pass", logger);
             
             // Check existence of node 1
+            program.LogFile("Checking existence of node 1", "Comment", logger);
+            if(graph.NodeExists(1))
+                program.LogFile("Checking existence of node 1", "Pass", logger);
+            else
+                program.LogFile("Checking existence of node 1", "Fail", logger);
 
             // Check existence of node 2
-
-            // Create a node 2
+            program.LogFile("Checking existence of node 2", "Comment", logger);
+            if (graph.NodeExists(2))
+                program.LogFile("Checking existence of node 2", "Pass", logger);
+            else
+                program.LogFile("Checking existence of node 2", "Fail", logger);
 
             // Check for arc between 1 and 2
+            program.LogFile("Checking existence of arc between 1 and 2", "Comment", logger);
+            if (graph.ArcExists(1,2))
+                program.LogFile("Checking existence of arc between 1 and 2", "Pass", logger);
+            else
+                program.LogFile("Checking existence of arc between 1 and 2", "Fail", logger);
+            
+            // Create a new node
 
-            // Insert arc between 1 and 2
+            // Insert arc between 1 and new node
 
             // Shortest path between given node and all other nodes
             program.LogFile("Finding shortest path between given node to all other node", "Comment", logger);
@@ -63,6 +78,7 @@ namespace ConsoleApplication
             program.LogFile("Finding shortest path between given node to all other node", "Pass", logger);
             // else
             //program.LogFile("Finding shortest path between given node to all other node", "Fail", logger);
+
 
             // Shortest path between given nodes
             program.LogFile("Finding shortest path between nodes 1 and 3", "Comment", logger);
