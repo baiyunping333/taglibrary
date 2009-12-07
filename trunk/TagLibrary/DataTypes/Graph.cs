@@ -133,6 +133,91 @@ namespace TagLibrary.DataTypes
             }
         }
 
+        public void ShortestPaths(int startNodeID, int endNodeID, StreamWriter file)
+        {
+            int i, j;                                   /* counters */
+            int[] visited = new int[Nodes.Count];       /* is the node visited? */
+            int[] distance = new int[Nodes.Count];      /* minimum distance(time) to each node from start node*/
+            int[] parent = new int[Nodes.Count];        /* previous node to reach the current node*/
+            //int[] parent_wait = new int[Nodes.Count]; /* waiting time at parent node */
+            int v;                           /* current vertex to process */
+            int w;                           /* candidate next vertex */
+            int weight;                      /* edge weight */
+            int dist;                        /* best current distance from start */
+            bool spFound = false;
+
+            for (i = 0; i < Nodes.Count; i++)
+            {
+                visited[i] = 0;
+                distance[i] = 9999; //INFINITY;
+                parent[i] = -1;
+                //parent_wait[i] = 0;
+            }
+
+            int start = GetNodeIndex(startNodeID, this);
+            // check start is valid
+            int dest = GetNodeIndex(endNodeID, this);
+            // check dest is valid
+
+            List<Arc> aList;
+            Arc a;
+            distance[start] = 1; // Santhosh - why this has to be 1.. cant it be 0??
+            v = start;
+
+            while (visited[v] == 0)
+            {
+                visited[v] = 1;
+                aList = Nodes[v].Arcs;
+
+                //printf(" Examining Node: %d \n", graph->nodes[v].id);
+                for (i = 0; i < Nodes[v].NumberOfNeighbours; i++)
+                {
+                    a = aList[i];
+                    w = GetNodeIndex(a.EndNode, this);
+
+                    weight = GetWeight(v, distance[v], i);
+                    //printf("%d, %d, %d\t", a->end, distance[v], weight);
+
+                    if (weight != -1)
+                    {
+                        if (distance[w] > (distance[v] + weight))
+                        {
+                            distance[w] = distance[v] + weight;
+                            //parent_wait[w] = parent_wait[v];
+                            parent[w] = v;
+                            Nodes[w].ParentId = Nodes[v].Id;
+                            Nodes[w].ParentTime = distance[v];
+                            //printf("Weight is less than current minimum\n");
+                        }
+                    }
+                }
+
+                //v = 1;
+                dist = 10000; //INFINITY;
+                for (i = 0; i < Nodes.Count; i++)
+                    if ((visited[i] == 0) && (dist > distance[i]))
+                    {
+                        dist = distance[i];
+                        v = i;
+                    }
+                if (dest != -1 && v == dest)
+                {
+                    spFound = true;
+                    break;
+                }
+            }
+
+            if (spFound)
+            {
+                for (i = 0; i < Nodes.Count; i++)
+                {
+                    if (endNodeID == Nodes[i].Id)
+                        file.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, endNodeID, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
+                    //Console.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
+                }
+            }
+        }
+
         #region Accessors
 
         public Node GetNode(int nodeId1, int time)
