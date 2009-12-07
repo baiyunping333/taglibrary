@@ -133,7 +133,7 @@ namespace TagLibrary.DataTypes
             }
         }
 
-        public void ShortestPaths(int startNodeID, int endNodeID, StreamWriter file)
+        public bool ShortestPaths(int startNodeID, int endNodeID, StreamWriter file)
         {
             int i, j;                                   /* counters */
             int[] visited = new int[Nodes.Count];       /* is the node visited? */
@@ -216,6 +216,7 @@ namespace TagLibrary.DataTypes
                     //Console.WriteLine(string.Format("{0},{1},{2},{3},{4}", startNodeID, Nodes[i].Id, distance[i], Nodes[i].ParentId, nodes[i].ParentTime));
                 }
             }
+            return spFound;
         }
 
         #region Accessors

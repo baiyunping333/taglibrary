@@ -64,6 +64,18 @@ namespace ConsoleApplication
             // else
             //program.LogFile("Finding shortest path between given node to all other node", "Fail", logger);
 
+            // Shortest path between given nodes
+            program.LogFile("Finding shortest path between nodes 1 and 3", "Comment", logger);
+            program.LogFile("Creating output file for shortest path", "Comment", logger);
+            file = new StreamWriter("output.csv", true);
+            file.WriteLine("Origin, Destination, Distance, Previous Node, Reached Previous Node at");
+            bool status = graph.ShortestPaths(1, 3, file);
+            file.Close();
+            if(status)
+                program.LogFile("Finding shortest path between nodes 1 and 3", "Pass", logger);
+            else
+                program.LogFile("Finding shortest path between given node to all other node", "Fail", logger);
+
             // Close Logger
             program.LogFile("", "Close", logger);
             logger.Close();
