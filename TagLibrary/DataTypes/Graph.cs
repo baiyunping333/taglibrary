@@ -155,8 +155,11 @@ namespace TagLibrary.DataTypes
             }
 
             int start = GetNodeIndex(startNodeID);
-            // check start is valid
+            if (start == -1)
+                return false;
             int dest = GetNodeIndex(endNodeID);
+            if (dest == -1)
+                return false;
             // check dest is valid
 
             List<Arc> aList;
