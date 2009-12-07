@@ -160,7 +160,6 @@ namespace TagLibrary.DataTypes
             int dest = GetNodeIndex(endNodeID);
             if (dest == -1)
                 return false;
-            // check dest is valid
 
             List<Arc> aList;
             Arc a;
