@@ -93,6 +93,7 @@ namespace ConsoleApplication
                 program.LogFile("Finding shortest path between given node to all other node", "Fail", logger);
 
             // Close Logger
+            Console.ReadKey();
             program.LogFile("", "Close", logger);
             logger.Close();
         }
